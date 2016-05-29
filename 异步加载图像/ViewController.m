@@ -33,6 +33,10 @@ static NSString * cellId = @"cellId";
 //操作缓存池
 @property (nonatomic, strong) NSMutableDictionary * operationCache;
 
+//下载队列
+@property (nonatomic, strong) NSOperationQueue * downloadQueue;
+
+
 @end
 
 @implementation ViewController{
@@ -58,6 +62,8 @@ static NSString * cellId = @"cellId";
     // 实例化图像缓冲池
     _imageCache = [NSMutableDictionary dictionary];
     
+    //实例化下载队列
+    _downloadQueue = [[NSOperationQueue alloc] init];
     
     [self setupUI];
     
@@ -115,8 +121,8 @@ static NSString * cellId = @"cellId";
     cell.iconImageView.image = placeholder;
     
     
-    //异步加载网络图片
-    NSOperationQueue * queue = [[ NSOperationQueue alloc] init];
+    //异步加载网络图片，这里是局部变量，无法记录当前程序一共有多少下载任务，所以定义用全局变量_downloadQueue取代这个局部变量
+    //NSOperationQueue * queue = [[ NSOperationQueue alloc] init];
     
     //由于在每次滚动的过程中，每次滚出的cell都要重新执行当前数据源方法，所以每次都会从网络下载图像，造成流量浪费，因此可以把下载好的图片保存在每个model中，如果模型中有image，则直接用model中的image图像设置
     
@@ -133,14 +139,26 @@ static NSString * cellId = @"cellId";
         //这样在下载的过程中，不停的对该图像滚进屏幕和滚出屏幕，造成一直向队列中添加任务，造成重复的添加任务
         if ([model.name isEqualToString:@"保卫萝卜"]) {
             [NSThread sleepForTimeInterval:10];
+        }else{
+            //其他延时1秒
+            [NSThread sleepForTimeInterval:1];
         }
         
+        //显示当前下载队列中有多少个任务
+        NSLog(@"当前有%zd个下载任务",  self.downloadQueue.operationCount);
         
-        NSData * data = [NSData dataWithContentsOfURL:url];
+        
+        
         NSLog(@"下载%@中.....",model.name);
+        NSData * data = [NSData dataWithContentsOfURL:url];
+        NSLog(@"%@下载完成",model.name);
+        
+
         
         //从url下载完成后，立即从操作队列中删除
         [_operationCache removeObjectForKey:model.icon];
+        
+        
         
         
         
@@ -173,10 +191,10 @@ static NSString * cellId = @"cellId";
     
     
     //添加到队列中
-    [queue addOperation:op];
+    [_downloadQueue addOperation:op];
     NSLog(@"%@下载被添加到队列中",model.name);
     
-    
+
     //添加到操作缓冲池中
     [_operationCache setValue:op forKey:model.icon];
     
