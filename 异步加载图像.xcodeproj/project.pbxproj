@@ -25,6 +25,8 @@
 		496C7FAF1CFB2E5F00047906 /* UIView+CZAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 496C7FA31CFB2E5F00047906 /* UIView+CZAddition.m */; };
 		496C7FB01CFB2E5F00047906 /* UIViewController+CZAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 496C7FA51CFB2E5F00047906 /* UIViewController+CZAddition.m */; };
 		496C7FB31CFB2F5A00047906 /* AppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 496C7FB21CFB2F5A00047906 /* AppInfo.m */; };
+		496C7FB71CFB302C00047906 /* AppInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 496C7FB51CFB302C00047906 /* AppInfoCell.m */; };
+		496C7FB81CFB302C00047906 /* AppInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 496C7FB61CFB302C00047906 /* AppInfoCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +65,9 @@
 		496C7FA51CFB2E5F00047906 /* UIViewController+CZAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+CZAddition.m"; sourceTree = "<group>"; };
 		496C7FB11CFB2F5A00047906 /* AppInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppInfo.h; sourceTree = "<group>"; };
 		496C7FB21CFB2F5A00047906 /* AppInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppInfo.m; sourceTree = "<group>"; };
+		496C7FB41CFB302C00047906 /* AppInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppInfoCell.h; sourceTree = "<group>"; };
+		496C7FB51CFB302C00047906 /* AppInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppInfoCell.m; sourceTree = "<group>"; };
+		496C7FB61CFB302C00047906 /* AppInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AppInfoCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +105,9 @@
 				496C7F7B1CFB2AE700047906 /* AppDelegate.m */,
 				496C7F7D1CFB2AE700047906 /* ViewController.h */,
 				496C7F7E1CFB2AE700047906 /* ViewController.m */,
+				496C7FB41CFB302C00047906 /* AppInfoCell.h */,
+				496C7FB51CFB302C00047906 /* AppInfoCell.m */,
+				496C7FB61CFB302C00047906 /* AppInfoCell.xib */,
 				496C7FB11CFB2F5A00047906 /* AppInfo.h */,
 				496C7FB21CFB2F5A00047906 /* AppInfo.m */,
 				496C7F801CFB2AE700047906 /* Main.storyboard */,
@@ -207,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				496C7F871CFB2AE700047906 /* LaunchScreen.storyboard in Resources */,
+				496C7FB81CFB302C00047906 /* AppInfoCell.xib in Resources */,
 				496C7F841CFB2AE700047906 /* Assets.xcassets in Resources */,
 				496C7F821CFB2AE700047906 /* Main.storyboard in Resources */,
 			);
@@ -224,6 +233,7 @@
 				496C7FA71CFB2E5F00047906 /* NSArray+Log.m in Sources */,
 				496C7FAA1CFB2E5F00047906 /* NSString+Hash.m in Sources */,
 				496C7F7F1CFB2AE700047906 /* ViewController.m in Sources */,
+				496C7FB71CFB302C00047906 /* AppInfoCell.m in Sources */,
 				496C7FA81CFB2E5F00047906 /* NSAttributedString+CZAdditon.m in Sources */,
 				496C7FAB1CFB2E5F00047906 /* UIButton+CZAddition.m in Sources */,
 				496C7FAF1CFB2E5F00047906 /* UIView+CZAddition.m in Sources */,

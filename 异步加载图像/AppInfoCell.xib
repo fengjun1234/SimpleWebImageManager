@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="117" id="KGk-i7-Jjw" customClass="AppInfoCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="99"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qDE-DX-BRm">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="EBE-YR-N9Q"/>
+                            <constraint firstAttribute="height" constant="100" id="Mw7-HF-hMB"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qfb-lA-Cve">
+                        <rect key="frame" x="123" y="70" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2zv-Zj-aHG">
+                        <rect key="frame" x="123" y="8" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="qDE-DX-BRm" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="3jA-cm-Uhq"/>
+                    <constraint firstItem="qDE-DX-BRm" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="626-bT-iXw"/>
+                    <constraint firstItem="2zv-Zj-aHG" firstAttribute="leading" secondItem="qDE-DX-BRm" secondAttribute="trailing" constant="23" id="W3f-Z9-DNR"/>
+                    <constraint firstAttribute="topMargin" secondItem="2zv-Zj-aHG" secondAttribute="top" id="XTD-Dd-ZXe"/>
+                    <constraint firstItem="Qfb-lA-Cve" firstAttribute="leading" secondItem="2zv-Zj-aHG" secondAttribute="leading" id="ZQM-bt-ZOR"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Qfb-lA-Cve" secondAttribute="bottom" id="pXh-yD-GFk"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="downloadLabel" destination="Qfb-lA-Cve" id="94I-1D-s7p"/>
+                <outlet property="iconImageView" destination="qDE-DX-BRm" id="rMr-Cc-5ta"/>
+                <outlet property="nameLabel" destination="2zv-Zj-aHG" id="v6T-F4-rfU"/>
+            </connections>
+            <point key="canvasLocation" x="295" y="155.5"/>
+        </tableViewCell>
+    </objects>
+</document>
