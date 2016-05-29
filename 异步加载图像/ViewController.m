@@ -14,7 +14,7 @@
 #import "CZAdditions.h"
 
 /*
- 沙盒缓存
+ 沙盒
  每次打开应用都要从网络下载图片，造成流量浪费，可以把图片放在本地
  
  
@@ -27,10 +27,11 @@
 static NSString * cellId = @"cellId";
 @interface ViewController ()<UITableViewDataSource>
 
-//内存缓存
-@property (nonatomic, strong) NSDictionary * imageCache;
+//图像缓存池
+@property (nonatomic, strong) NSMutableDictionary * imageCache;
 
-
+//操作缓存池
+@property (nonatomic, strong) NSMutableDictionary * operationCache;
 
 @end
 
@@ -102,7 +103,10 @@ static NSString * cellId = @"cellId";
         [_imageCache setValue:cacheImage forKey:model.icon];
     }
     
-    
+    //判断是否在操作队列中
+    if (_operationCache[model.icon] !=nil) {
+        return cell;
+    }
     
     
     
@@ -116,7 +120,7 @@ static NSString * cellId = @"cellId";
     
     //由于在每次滚动的过程中，每次滚出的cell都要重新执行当前数据源方法，所以每次都会从网络下载图像，造成流量浪费，因此可以把下载好的图片保存在每个model中，如果模型中有image，则直接用model中的image图像设置
     
-    
+    //定义操作block
     NSBlockOperation * op = [ NSBlockOperation blockOperationWithBlock:^{
         
         NSLog(@"%@",[NSThread currentThread]);
@@ -125,7 +129,20 @@ static NSString * cellId = @"cellId";
         
         NSURL * url  = [NSURL URLWithString:urlString];
         
+        //模拟某个图像延时
+        //这样在下载的过程中，不停的对该图像滚进屏幕和滚出屏幕，造成一直向队列中添加任务，造成重复的添加任务
+        if ([model.name isEqualToString:@"保卫萝卜"]) {
+            [NSThread sleepForTimeInterval:10];
+        }
+        
+        
         NSData * data = [NSData dataWithContentsOfURL:url];
+        NSLog(@"下载%@中.....",model.name);
+        
+        //从url下载完成后，立即从操作队列中删除
+        [_operationCache removeObjectForKey:model.icon];
+        
+        
         
         UIImage * image = [UIImage imageWithData:data];
         
@@ -137,16 +154,13 @@ static NSString * cellId = @"cellId";
         //把图像二进制数据保存到沙盒中
         [data writeToFile:imagePath atomically:YES];
         
-        
-        
-        
-        
+
         //把图像保存在图像缓存池imageCache
         [_imageCache setValue:image forKey:urlString];
         
         
         
-        //主线程更新UI
+        //下载完成后主线程更新UI
         
         [[NSOperationQueue mainQueue]  addOperationWithBlock:^{
             cell.iconImageView.image = image;
@@ -158,10 +172,13 @@ static NSString * cellId = @"cellId";
     }];
     
     
-    
+    //添加到队列中
     [queue addOperation:op];
+    NSLog(@"%@下载被添加到队列中",model.name);
     
     
+    //添加到操作缓冲池中
+    [_operationCache setValue:op forKey:model.icon];
     
     
     //cell.textLabel.text = model.name;;
