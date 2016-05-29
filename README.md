@@ -1,0 +1,2 @@
+# SimpleWebImageManager
+简单的实现一个WebImageManager，用来进行图像的异步加载
