@@ -62,14 +62,35 @@ static NSString * cellId = @"cellId";
     // 实例化图像缓冲池
     _imageCache = [NSMutableDictionary dictionary];
     
+    // 实例化操作缓存池
+    _operationCache = [NSMutableDictionary dictionary];
+    
+    
+    
     //实例化下载队列
     _downloadQueue = [[NSOperationQueue alloc] init];
+    
+    
+    
+    
     
     [self setupUI];
     
     NSLog(@"%@",NSHomeDirectory());
 }
 
+- (void)didReceiveMemoryWarning{
+    //收到内存警告后释放内存空间
+    [_imageCache removeAllObjects];
+    
+ 
+    [_downloadQueue cancelAllOperations];
+
+    [_operationCache removeAllObjects];
+    
+    
+    
+}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
