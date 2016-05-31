@@ -12,6 +12,11 @@
 #import "AppInfoCell.h"
 
 #import "CZAdditions.h"
+#import "WebImageManager.h"
+#import "WebImageDownloadOperation.h"
+
+#import "UIImageView+CZWebCache.h"
+//实现一共简单的WebImageMangager
 
 /*
  沙盒
@@ -26,16 +31,6 @@
 
 static NSString * cellId = @"cellId";
 @interface ViewController ()<UITableViewDataSource>
-
-//图像缓存池
-@property (nonatomic, strong) NSMutableDictionary * imageCache;
-
-//操作缓存池
-@property (nonatomic, strong) NSMutableDictionary * operationCache;
-
-//下载队列
-@property (nonatomic, strong) NSOperationQueue * downloadQueue;
-
 
 @end
 
@@ -59,20 +54,7 @@ static NSString * cellId = @"cellId";
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    // 实例化图像缓冲池
-    _imageCache = [NSMutableDictionary dictionary];
-    
-    // 实例化操作缓存池
-    _operationCache = [NSMutableDictionary dictionary];
-    
-    
-    
-    //实例化下载队列
-    _downloadQueue = [[NSOperationQueue alloc] init];
-    
-    
-    
-    
+ 
     
     [self setupUI];
     
@@ -80,13 +62,7 @@ static NSString * cellId = @"cellId";
 }
 
 - (void)didReceiveMemoryWarning{
-    //收到内存警告后释放内存空间
-    [_imageCache removeAllObjects];
     
- 
-    [_downloadQueue cancelAllOperations];
-
-    [_operationCache removeAllObjects];
     
     
     
@@ -108,136 +84,15 @@ static NSString * cellId = @"cellId";
     cell.nameLabel.text = model.name;
     cell.downloadLabel.text = model.download;
     
-    UIImage * cacheImage = [_imageCache valueForKey:model.icon];
+    [cell.iconImageView cz_setImageWithURLString:model.icon];
     
-    //如果图像缓存池中有，则从图像缓存池中取
-    if (cacheImage!=nil) {
-        NSLog(@"从缓存中取图像");
-        cell.iconImageView.image = cacheImage;
-        return cell;
-    }
-    
-    //看沙盒中是否有该图像
-    NSString * imagePath = [self imagePathInCacheDirectoryWithURLString:model.icon];
-    
-    cacheImage = [UIImage imageWithContentsOfFile:imagePath];
-    if (cacheImage!=nil) {
-        NSLog(@"从沙盒中取图像");
-        
-        cell.iconImageView.image = cacheImage;
-        
-        //把沙盒中图像添加到缓存中，以后可以直接从缓存中取了
-        [_imageCache setValue:cacheImage forKey:model.icon];
-    }
-    
-    //判断是否在操作队列中
-    if (_operationCache[model.icon] !=nil) {
-        return cell;
-    }
-    
-    
-    
-    //先设置下站位图像
-    UIImage *placeholder = [UIImage imageNamed:@"user_default"];
-    cell.iconImageView.image = placeholder;
-    
-    
-    //异步加载网络图片，这里是局部变量，无法记录当前程序一共有多少下载任务，所以定义用全局变量_downloadQueue取代这个局部变量
-    //NSOperationQueue * queue = [[ NSOperationQueue alloc] init];
-    
-    //由于在每次滚动的过程中，每次滚出的cell都要重新执行当前数据源方法，所以每次都会从网络下载图像，造成流量浪费，因此可以把下载好的图片保存在每个model中，如果模型中有image，则直接用model中的image图像设置
-    
-    //定义操作block
-    NSBlockOperation * op = [ NSBlockOperation blockOperationWithBlock:^{
-        
-        NSLog(@"%@",[NSThread currentThread]);
-        
-        NSString * urlString = model.icon;
-        
-        NSURL * url  = [NSURL URLWithString:urlString];
-        
-        //模拟某个图像延时
-        //这样在下载的过程中，不停的对该图像滚进屏幕和滚出屏幕，造成一直向队列中添加任务，造成重复的添加任务
-        if ([model.name isEqualToString:@"保卫萝卜"]) {
-            [NSThread sleepForTimeInterval:10];
-        }else{
-            //其他延时1秒
-            [NSThread sleepForTimeInterval:1];
-        }
-        
-        //显示当前下载队列中有多少个任务
-        NSLog(@"当前有%zd个下载任务",  self.downloadQueue.operationCount);
-        
-        
-        
-        NSLog(@"下载%@中.....",model.name);
-        NSData * data = [NSData dataWithContentsOfURL:url];
-        NSLog(@"%@下载完成",model.name);
-        
-
-        
-        //从url下载完成后，立即从操作队列中删除
-        [_operationCache removeObjectForKey:model.icon];
-        
-        
-        
-        
-        
-        UIImage * image = [UIImage imageWithData:data];
-        
-        
-        //取图像的保存路径
-        NSString * imagePath = [self imagePathInCacheDirectoryWithURLString:urlString];
-        
-        
-        //把图像二进制数据保存到沙盒中
-        [data writeToFile:imagePath atomically:YES];
-        
-
-        //把图像保存在图像缓存池imageCache
-        [_imageCache setValue:image forKey:urlString];
-        
-        
-        
-        //下载完成后主线程更新UI
-        
-        [[NSOperationQueue mainQueue]  addOperationWithBlock:^{
-            cell.iconImageView.image = image;
-           // NSLog(@"更新主线程UI");
-        }];
-        
-        
-        
-    }];
-    
-    
-    //添加到队列中
-    [_downloadQueue addOperation:op];
-    NSLog(@"%@下载被添加到队列中",model.name);
     
 
-    //添加到操作缓冲池中
-    [_operationCache setValue:op forKey:model.icon];
-    
-    
-    //cell.textLabel.text = model.name;;
     return cell;
     
 }
 
-//根据URL字符串获得图像的全路径
-- (NSString * )imagePathInCacheDirectoryWithURLString:(NSString *)urlString{
-    
-    NSString * cachePath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
-    
-    //对url进行MD5算法
-    NSString * fileName = [urlString cz_md5String];
-    
-    
-    //返回图像的绝对路径
-    return [cachePath stringByAppendingPathComponent:fileName];
-    
-}
+
 
 - (void)setupUI {
     
